@@ -29,7 +29,8 @@ export const InputSearchContainer = styled.div`
   width: 100%;
 
   input {
-    width: 93.5%;
+    box-sizing: border-box;
+    width: 100%;
     background: #fff;
     border: none;
     border-radius: 25px;
@@ -98,12 +99,15 @@ export const Card = styled.div`
     }
   }
   .buttons {
+    button,
+    img {
+      width: 20px;
+      height: 20px;
+    }
     button {
       background: transparent;
       border: none;
       margin-left: 10px;
-      width: 20px;
-      height: 20px;
     }
   }
 `;

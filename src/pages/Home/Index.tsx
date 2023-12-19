@@ -9,6 +9,7 @@ import arrow from "../../assets/images/icons/arrow.svg";
 import trash from "../../assets/images/icons/trash.svg";
 import edit from "../../assets/images/icons/edit.svg";
 import { Link } from "react-router-dom";
+
 const CONTACTS = 3;
 
 export default function Home() {
@@ -37,7 +38,7 @@ export default function Home() {
                   <strong>José Artur</strong>
                   <small>Instagram</small>
                 </div>
-                <span>artur@lora.com</span>
+                <span>artur@mail.com</span>
                 <span>(83)99060916</span>
               </div>
               <div className="buttons">
