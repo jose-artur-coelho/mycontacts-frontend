@@ -1,12 +1,12 @@
+import { BrowserRouter } from "react-router-dom";
+
 import { ThemeProvider } from "styled-components";
 import GlobalStyles from "../../assets/styles/global";
 import defaultTheme from "../../assets/styles/themes/default";
 import { Container } from "./styles";
+
 import Header from "../Header";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
-import Home from "../../pages/Home/Index";
-import EditContact from "../../pages/EditContact";
-import NewContact from "../../pages/NewContact";
+import Router from "../../Router";
 
 function App() {
   return (
@@ -15,11 +15,7 @@ function App() {
         <GlobalStyles />
         <Container>
           <Header />
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="/new" element={<NewContact />} />
-            <Route path="/edit/:id" element={<EditContact />} />
-          </Routes>
+          <Router />
         </Container>
       </ThemeProvider>
     </BrowserRouter>
