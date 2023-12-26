@@ -8,11 +8,11 @@ interface error {
 export default function useFormErrors() {
   const [errors, setErrors] = useState<error[]>([]);
 
-  function addError(field: string, message: string) {
-    setErrors((prevstate) => [
-      ...prevstate,
-      { field: field, message: message },
-    ]);
+  function addError({ field, message }: error) {
+    const errorExists = errors.find((error) => error.field === field);
+
+    if (errorExists) return;
+    setErrors((prevstate) => [...prevstate, { field, message }]);
   }
   function removeError(errorField: string) {
     setErrors((prevState) =>
