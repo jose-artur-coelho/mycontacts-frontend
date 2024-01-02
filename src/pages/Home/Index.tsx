@@ -3,55 +3,78 @@ import {
   Container,
   Card,
   InputSearchContainer,
-  ListContainer,
+  ListHeader,
 } from "./styles";
 import arrow from "../../assets/images/icons/arrow.svg";
 import trash from "../../assets/images/icons/trash.svg";
 import edit from "../../assets/images/icons/edit.svg";
 import { Link } from "react-router-dom";
-
-const CONTACTS = 3;
+import useHomeContacts from "../../hooks/useHomeContacts";
+import Loader from "../../components/Loader";
 
 export default function Home() {
-  if (CONTACTS)
-    return (
-      <>
-        <InputSearchContainer>
-          <input type="text" placeholder="Pesquisar contato..." />
-        </InputSearchContainer>
-        <Container>
-          <Header>
-            <strong>3 contatos</strong>
-            <Link to="/new">Novo contato</Link>
-          </Header>
+  const {
+    filteredContacts,
+    orderBy,
+    search,
+    isLoading,
+    handleToggleOrderBy,
+    handleSearchContact,
+  } = useHomeContacts();
 
-          <ListContainer>
-            <header>
-              <button type="button">
-                <span>Nome </span>
-                <img src={arrow} alt="Arrow" />
+  console.log(search);
+  return (
+    <>
+      <Loader isLoading={isLoading} />
+      <InputSearchContainer>
+        <input
+          type="text"
+          value={search}
+          placeholder="Pesquisar contato..."
+          onChange={handleSearchContact}
+        />
+      </InputSearchContainer>
+      <Container>
+        <Header>
+          <strong>
+            {filteredContacts.length}{" "}
+            {filteredContacts.length === 1 ? "contato" : "Contatos"}
+          </strong>
+          <Link to="/new">Novo contato</Link>
+        </Header>
+
+        {filteredContacts.length > 0 && (
+          <ListHeader $orderBy={orderBy}>
+            <button type="button" onClick={handleToggleOrderBy}>
+              <span>Nome </span>
+              <img src={arrow} alt="Arrow" />
+            </button>
+          </ListHeader>
+        )}
+
+        {filteredContacts.map((contact) => (
+          <Card key={contact.id}>
+            <div className="info">
+              <div className="contact-name">
+                <strong>{contact.name}</strong>
+                {contact.category_name && (
+                  <small>{contact.category_name}</small>
+                )}
+              </div>
+              <span>{contact.email}</span>
+              <span>{contact.phone}</span>
+            </div>
+            <div className="buttons">
+              <Link to={`edit/${contact.id}`}>
+                <img src={edit} alt="" />
+              </Link>
+              <button>
+                <img src={trash} alt="" />
               </button>
-            </header>
-            <Card>
-              <div className="info">
-                <div className="contact-name">
-                  <strong>José Artur</strong>
-                  <small>Instagram</small>
-                </div>
-                <span>artur@mail.com</span>
-                <span>(83)99060916</span>
-              </div>
-              <div className="buttons">
-                <Link to="/edit/16263">
-                  <img src={edit} alt="" />
-                </Link>
-                <button>
-                  <img src={trash} alt="" />
-                </button>
-              </div>
-            </Card>
-          </ListContainer>
-        </Container>
-      </>
-    );
+            </div>
+          </Card>
+        ))}
+      </Container>
+    </>
+  );
 }
