@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import ContactsServices from "../services/ContactsServices";
+import ContactsService from "../services/ContactsService";
 import contact from "../types/contact";
 
 export default function useContacts() {
@@ -12,7 +12,7 @@ export default function useContacts() {
   const loadContacts = useCallback(async () => {
     try {
       setIsLoading(true);
-      const contactsList = await ContactsServices.listContacts(orderBy);
+      const contactsList = await ContactsService.listContacts(orderBy);
       setContacts(contactsList);
       setHasError(false);
     } catch (error) {
