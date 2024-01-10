@@ -27,17 +27,16 @@ export const ErrorContainer = styled.div`
     }
 
     a {
-      color: ${({ theme }) => theme.colors.primary.main};
+      background: ${({ theme }) => theme.colors.primary.main};
+      color: #fff;
       text-decoration: none;
       font-weight: bold;
-      border: 2px solid ${({ theme }) => theme.colors.primary.main};
       padding: 8px 16px;
       border-radius: 4px;
       transition: all 0.2s ease-in;
       text-align: center;
       &:hover {
-        background: ${({ theme }) => theme.colors.primary.main};
-        color: ${({ theme }) => theme.colors.primary.lighter};
+        background: ${({ theme }) => theme.colors.primary.light};
       }
       &:active {
         background: ${({ theme }) => theme.colors.primary.dark};
