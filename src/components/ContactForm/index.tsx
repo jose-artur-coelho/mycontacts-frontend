@@ -10,6 +10,7 @@ import Button from "../Button";
 
 import React, { useState } from "react";
 import useFormErrors from "../../hooks/useFormError";
+import useCategories from "../../hooks/useCategories";
 
 interface ContactFormProps {
   buttonLabel: string;
@@ -21,6 +22,7 @@ export default function ContactForm({ buttonLabel }: ContactFormProps) {
   const [phone, setPhone] = useState("");
   const { errors, addError, removeError, getErrorByFieldName } =
     useFormErrors();
+  const { categories, isLoading } = useCategories();
 
   const isFormValid = name && errors.length === 0;
 
@@ -55,41 +57,48 @@ export default function ContactForm({ buttonLabel }: ContactFormProps) {
   }
 
   return (
-    <Form onSubmit={handleSubmit} noValidate>
-      <FormGroup error={getErrorByFieldName("name")}>
-        <Input
-          placeholder="Nome *"
-          onChange={handleNameChange}
-          $error={Boolean(getErrorByFieldName("name"))}
-        />
-      </FormGroup>
-      <FormGroup error={getErrorByFieldName("email")}>
-        <Input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={handleEmailChange}
-          $error={Boolean(getErrorByFieldName("email"))}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Input
-          placeholder="Telefone"
-          value={phone}
-          onChange={handlePhoneChange}
-          maxLength={15}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Select>
-          <option value="instagram">Instagram</option>
-        </Select>
-      </FormGroup>
-      <ButtonContainer>
-        <Button type="submit" disabled={!isFormValid}>
-          {buttonLabel}
-        </Button>
-      </ButtonContainer>
-    </Form>
+    <>
+      <Form onSubmit={handleSubmit} noValidate>
+        <FormGroup error={getErrorByFieldName("name")}>
+          <Input
+            placeholder="Nome *"
+            onChange={handleNameChange}
+            $error={Boolean(getErrorByFieldName("name"))}
+          />
+        </FormGroup>
+        <FormGroup error={getErrorByFieldName("email")}>
+          <Input
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={handleEmailChange}
+            $error={Boolean(getErrorByFieldName("email"))}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            placeholder="Telefone"
+            value={phone}
+            onChange={handlePhoneChange}
+            maxLength={15}
+          />
+        </FormGroup>
+        <FormGroup isLoading={isLoading}>
+          <Select disabled={isLoading}>
+            <option value="">Sem categoria</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </Select>
+        </FormGroup>
+        <ButtonContainer>
+          <Button type="submit" disabled={!isFormValid}>
+            {buttonLabel}
+          </Button>
+        </ButtonContainer>
+      </Form>
+    </>
   );
 }
