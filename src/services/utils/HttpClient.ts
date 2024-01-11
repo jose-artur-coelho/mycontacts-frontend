@@ -18,6 +18,25 @@ class HttpClient {
       throw new APIError(`${response.status} - ${response.statusText}`);
     }
   }
+
+  async post(path: string, data: object) {
+    const response = await fetch(`${this.baseURL}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const body = await response.json();
+      return body;
+    }
+    if (response.status >= 400 && response.status < 500) {
+      const body = await response.json();
+      throw new APIError(body.error);
+    }
+  }
 }
 
 export default HttpClient;
