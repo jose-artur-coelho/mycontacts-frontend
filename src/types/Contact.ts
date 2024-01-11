@@ -1,4 +1,4 @@
-export default interface contact {
+export default interface Contact {
   id: string;
   name: string;
   email: null | string;

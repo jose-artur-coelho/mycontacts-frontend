@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ContactsService from "../services/ContactsService";
-import contact from "../types/contact";
+import Contact from "../types/Contact";
 
 export default function useContacts() {
-  const [contacts, setContacts] = useState<contact[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [orderBy, setOrderBy] = useState("asc");
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);

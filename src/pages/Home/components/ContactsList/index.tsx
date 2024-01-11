@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import contact from "../../../../types/contact";
+import Contact from "../../../../types/Contact";
 import { Card } from "./styles";
 import trash from "../../../../assets/images/icons/trash.svg";
 import edit from "../../../../assets/images/icons/edit.svg";
 import ListHeader from "../ListHeader";
 
 interface ContactsListProps {
-  contacts: contact[];
+  contacts: Contact[];
   orderBy: string;
   handleToggleOrderBy: () => void;
 }
