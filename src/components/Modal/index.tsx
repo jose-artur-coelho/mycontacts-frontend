@@ -26,7 +26,7 @@ export default function Modal({ danger = defaultProps.danger }: ModalProps) {
             <button type="button" className="cancel-button">
               Cancelar
             </button>
-            <Button type="button" $danger={danger}>
+            <Button type="button" danger={danger}>
               Deletar
             </Button>
           </Footer>
