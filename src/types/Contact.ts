@@ -1,8 +1,6 @@
-export default interface Contact {
+import ContactWithoutId from "./ContactWithoutId";
+
+export default interface Contact extends ContactWithoutId {
   id: string;
-  name: string;
-  email: null | string;
-  phone: null | string;
   category_name: null | string;
-  category_id: null | string;
 }
