@@ -7,11 +7,13 @@ import { Container } from "./styles";
 
 import Header from "../Header";
 import Router from "../../Router";
+import ToastContainer from "../Toast/ToastContainer";
 
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={defaultTheme}>
+        <ToastContainer />
         <GlobalStyles />
         <Container>
           <Header />
