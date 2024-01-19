@@ -4,6 +4,7 @@ import checkCircle from "../../../assets/images/icons/check-circle.svg";
 import { Container } from "./styles";
 
 import { Message } from "../ToastContainer";
+import { useEffect } from "react";
 
 interface ToastMessageProps {
   message: Message;
@@ -14,11 +15,17 @@ export default function ToastMessage({
   message,
   onRemoveToast,
 }: ToastMessageProps) {
-  const { id, type, text } = message;
+  const { id, type, text, duration } = message;
 
   function handleRemoveToast() {
     onRemoveToast(id);
   }
+  useEffect(() => {
+    const timeOut = setTimeout(() => onRemoveToast(id), duration || 4000);
+    return () => {
+      clearTimeout(timeOut);
+    };
+  }, [id, duration, onRemoveToast]);
 
   return (
     <Container
