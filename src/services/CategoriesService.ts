@@ -1,7 +1,7 @@
 import HttpClient from "./utils/HttpClient";
 
 class CategoriesService {
-  httpClient;
+  private httpClient;
   constructor() {
     this.httpClient = new HttpClient("http://localhost:3000");
   }
