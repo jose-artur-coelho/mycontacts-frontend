@@ -8,97 +8,163 @@ import Input from "../Input";
 import Select from "../Select";
 import Button from "../Button";
 
-import React, { useState } from "react";
+import React, { Ref, forwardRef, useImperativeHandle, useState } from "react";
 import useFormErrors from "../../hooks/useFormError";
 import useCategories from "../../hooks/useCategories";
 
+import ContactWithoutId from "../../types/ContactWithoutId";
+
 interface ContactFormProps {
   buttonLabel: string;
+  onSubmit: (contactData: ContactWithoutId) => Promise<void>;
 }
 
-export default function ContactForm({ buttonLabel }: ContactFormProps) {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const { errors, addError, removeError, getErrorByFieldName } =
-    useFormErrors();
-  const { categories, isLoading } = useCategories();
+export type ContactFormRef = {
+  setFieldsValues: (contact: ContactWithoutId) => void;
+};
 
-  const isFormValid = name && errors.length === 0;
+const ContactForm = forwardRef(
+  ({ buttonLabel, onSubmit }: ContactFormProps, ref: Ref<ContactFormRef>) => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState("");
+    const [categoryId, setCategoryId] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setName(event.target.value);
-    const name = event.target.value;
+    const { errors, addError, removeError, getErrorByFieldName } =
+      useFormErrors();
+    const { categories, isLoading } = useCategories();
 
-    if (!name) {
-      addError({ field: "name", message: "Nome é obrigatório." });
-    } else {
-      removeError("name");
+    const isFormValid = name && errors.length === 0;
+
+    function setFieldsValues(contact: ContactWithoutId) {
+      const {
+        name: cName,
+        email: cEmail,
+        phone: cPhone,
+        category_id: cCatId,
+      } = contact;
+
+      setName(cName);
+      if (cEmail) setEmail(cEmail);
+      if (cPhone) setPhone(cPhone);
+      if (cCatId) setCategoryId(cCatId);
     }
-  }
 
-  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setEmail(event.target.value);
-    const email = event.target.value;
+    useImperativeHandle(
+      ref,
+      () => ({
+        setFieldsValues,
+      }),
+      []
+    );
 
-    if (email && !isEmailValid(email)) {
-      addError({ field: "email", message: "O formato do e-mail é inválido." });
-    } else {
-      removeError("email");
+    function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+      setName(event.target.value);
+      const name = event.target.value;
+
+      if (!name) {
+        addError({ field: "name", message: "Nome é obrigatório." });
+      } else {
+        removeError("name");
+      }
     }
-  }
 
-  function handlePhoneChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setPhone(formatPhone(event.target.value));
-  }
+    function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+      setEmail(event.target.value);
+      const email = event.target.value;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-  }
+      if (email && !isEmailValid(email)) {
+        addError({
+          field: "email",
+          message: "O formato do e-mail é inválido.",
+        });
+      } else {
+        removeError("email");
+      }
+    }
 
-  return (
-    <>
-      <Form onSubmit={handleSubmit} noValidate>
-        <FormGroup error={getErrorByFieldName("name")}>
-          <Input
-            placeholder="Nome *"
-            onChange={handleNameChange}
-            $error={Boolean(getErrorByFieldName("name"))}
-          />
-        </FormGroup>
-        <FormGroup error={getErrorByFieldName("email")}>
-          <Input
-            type="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={handleEmailChange}
-            $error={Boolean(getErrorByFieldName("email"))}
-          />
-        </FormGroup>
-        <FormGroup>
-          <Input
-            placeholder="Telefone"
-            value={phone}
-            onChange={handlePhoneChange}
-            maxLength={15}
-          />
-        </FormGroup>
-        <FormGroup isLoading={isLoading}>
-          <Select disabled={isLoading}>
-            <option value="">Sem categoria</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
-        <ButtonContainer>
-          <Button type="submit" disabled={!isFormValid}>
-            {buttonLabel}
-          </Button>
-        </ButtonContainer>
-      </Form>
-    </>
-  );
-}
+    function handlePhoneChange(event: React.ChangeEvent<HTMLInputElement>) {
+      setPhone(formatPhone(event.target.value));
+    }
+
+    function handleCategoryIdChange(
+      event: React.ChangeEvent<HTMLSelectElement>
+    ) {
+      setCategoryId(event.target.value);
+    }
+
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+      event.preventDefault();
+
+      setIsSubmitting(true);
+
+      await onSubmit({ name, email, phone, category_id: categoryId });
+
+      setIsSubmitting(false);
+      setName("");
+      setPhone("");
+      setEmail("");
+      setCategoryId("");
+    }
+
+    return (
+      <>
+        <Form onSubmit={handleSubmit} noValidate>
+          <FormGroup error={getErrorByFieldName("name")}>
+            <Input
+              placeholder="Nome *"
+              value={name}
+              disabled={isSubmitting}
+              onChange={handleNameChange}
+              $error={Boolean(getErrorByFieldName("name"))}
+            />
+          </FormGroup>
+          <FormGroup error={getErrorByFieldName("email")}>
+            <Input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              disabled={isSubmitting}
+              onChange={handleEmailChange}
+              $error={Boolean(getErrorByFieldName("email"))}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Input
+              placeholder="Telefone"
+              value={phone}
+              disabled={isSubmitting}
+              onChange={handlePhoneChange}
+              maxLength={15}
+            />
+          </FormGroup>
+          <FormGroup isLoading={isLoading}>
+            <Select
+              value={categoryId}
+              onChange={handleCategoryIdChange}
+              disabled={isLoading || isSubmitting}
+            >
+              <option value="">Sem categoria</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </Select>
+          </FormGroup>
+          <ButtonContainer>
+            <Button
+              type="submit"
+              disabled={!isFormValid}
+              isLoading={isSubmitting}
+            >
+              {buttonLabel}
+            </Button>
+          </ButtonContainer>
+        </Form>
+      </>
+    );
+  }
+);
+export default ContactForm;

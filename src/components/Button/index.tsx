@@ -22,8 +22,7 @@ export default function Button({
       disabled={disabled || isLoading}
       $danger={danger}
     >
-      {!isLoading && children}
-      {isLoading && <Spinner size={16} />}
+      {isLoading ? <Spinner size={16} /> : children}
     </StyledButton>
   );
 }
