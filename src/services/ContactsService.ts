@@ -1,3 +1,4 @@
+import ContactWithoutId from "../types/ContactWithoutId";
 import HttpClient from "./utils/HttpClient";
 
 class ContactService {
@@ -12,9 +13,17 @@ class ContactService {
   getContactbyId(id: string) {
     return this.httpClient.get(`/contacts/${id}`);
   }
-
-  createContact(options: { body: object; headers?: object }) {
+  createContact(options: { body: ContactWithoutId; headers?: object }) {
     return this.httpClient.post(`/contacts`, options);
+  }
+  updateContact(
+    id: string,
+    options: { body: ContactWithoutId; headers?: object }
+  ) {
+    return this.httpClient.put(`/contacts/${id}`, options);
+  }
+  deleteContact(id: string, options?: { headers: object }) {
+    return this.httpClient.delete(`/contacts/${id}`, options);
   }
 }
 export default new ContactService();
