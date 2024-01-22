@@ -9,12 +9,14 @@ interface ContactsListProps {
   contacts: Contact[];
   orderBy: string;
   handleToggleOrderBy: () => void;
+  onDeleteContact: (contact: Contact) => void;
 }
 
 export default function ContactsList({
   contacts,
   orderBy,
   handleToggleOrderBy,
+  onDeleteContact,
 }: ContactsListProps) {
   return (
     <>
@@ -32,10 +34,10 @@ export default function ContactsList({
           </div>
           <div className="buttons">
             <Link to={`edit/${contact.id}`}>
-              <img src={edit} alt="" />
+              <img src={edit} alt="Edit icon" />
             </Link>
-            <button>
-              <img src={trash} alt="" />
+            <button onClick={() => onDeleteContact(contact)}>
+              <img src={trash} alt="Bin icon" />
             </button>
           </div>
         </Card>
