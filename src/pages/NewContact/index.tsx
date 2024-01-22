@@ -1,11 +1,14 @@
 import PageHeader from "../../components/PageHeader";
-import ContactForm from "../../components/ContactForm";
+import ContactForm, { ContactFormRef } from "../../components/ContactForm";
 import ContactsService from "../../services/ContactsService";
 import ContactWithoutId from "../../types/ContactWithoutId";
 import toast from "../../utils/toast";
 import APIError from "../../errors/APIError";
+import { useRef } from "react";
 
 export default function NewContact() {
+  const contactFormRef = useRef<ContactFormRef>(null);
+
   async function handleSubmit(contactData: ContactWithoutId) {
     try {
       await ContactsService.createContact({ body: contactData });
@@ -14,6 +17,7 @@ export default function NewContact() {
         text: "Contato cadastrado com sucesso!",
         duration: 8000,
       });
+      contactFormRef.current?.resetFieldsValues();
     } catch (error) {
       if (error instanceof APIError) {
         toast({
@@ -31,7 +35,11 @@ export default function NewContact() {
   return (
     <>
       <PageHeader title="Novo contato" />
-      <ContactForm buttonLabel="Cadastrar" onSubmit={handleSubmit} />
+      <ContactForm
+        ref={contactFormRef}
+        buttonLabel="Cadastrar"
+        onSubmit={handleSubmit}
+      />
     </>
   );
 }

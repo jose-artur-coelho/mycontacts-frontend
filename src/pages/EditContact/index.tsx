@@ -8,9 +8,11 @@ import Loader from "../../components/Loader";
 import ContactsService from "../../services/ContactsService";
 import ContactWithoutId from "../../types/ContactWithoutId";
 import toast from "../../utils/toast";
+import APIError from "../../errors/APIError";
 
 export default function EditContact() {
   const [isLoading, setIsLoading] = useState(true);
+  const [contactName, setContactName] = useState("");
   const contactFormRef = useRef<ContactFormRef>(null);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ export default function EditContact() {
 
         if (id) {
           const contactData = await ContactsService.getContactbyId(id);
+          setContactName(contactData.name);
           contactFormRef.current?.setFieldsValues(contactData);
           setIsLoading(false);
         }
@@ -32,12 +35,38 @@ export default function EditContact() {
     })();
   }, [id, navigate]);
 
-  async function handleSubmit(contactData: ContactWithoutId) {}
+  async function handleSubmit(contactData: ContactWithoutId) {
+    try {
+      if (id) {
+        await ContactsService.updateContact(id, { body: contactData });
+        toast({
+          type: "success",
+          text: "Contato editado com sucesso!",
+          duration: 8000,
+        });
+        navigate("/");
+      }
+    } catch (error) {
+      if (error instanceof APIError) {
+        toast({
+          type: "danger",
+          text: error.message,
+        });
+      } else {
+        toast({
+          type: "danger",
+          text: "Ocorreu um erro ao cadastrar o contato.",
+        });
+      }
+    }
+  }
 
   return (
     <>
       <Loader isLoading={isLoading} />
-      <PageHeader title="Editar José Artur" />
+      <PageHeader
+        title={isLoading ? "Carregando..." : `Editar ${contactName}`}
+      />
       <ContactForm
         ref={contactFormRef}
         buttonLabel="Salvar alterações"

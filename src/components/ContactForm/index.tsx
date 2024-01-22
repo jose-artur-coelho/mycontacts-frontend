@@ -21,6 +21,7 @@ interface ContactFormProps {
 
 export type ContactFormRef = {
   setFieldsValues: (contact: ContactWithoutId) => void;
+  resetFieldsValues: () => void;
 };
 
 const ContactForm = forwardRef(
@@ -47,14 +48,22 @@ const ContactForm = forwardRef(
 
       setName(cName);
       if (cEmail) setEmail(cEmail);
-      if (cPhone) setPhone(cPhone);
+      if (cPhone) setPhone(formatPhone(cPhone));
       if (cCatId) setCategoryId(cCatId);
+    }
+
+    function resetFieldsValues() {
+      setName("");
+      setPhone("");
+      setEmail("");
+      setCategoryId("");
     }
 
     useImperativeHandle(
       ref,
       () => ({
         setFieldsValues,
+        resetFieldsValues,
       }),
       []
     );
@@ -102,10 +111,6 @@ const ContactForm = forwardRef(
       await onSubmit({ name, email, phone, category_id: categoryId });
 
       setIsSubmitting(false);
-      setName("");
-      setPhone("");
-      setEmail("");
-      setCategoryId("");
     }
 
     return (

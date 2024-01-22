@@ -48,6 +48,7 @@ export default function useContacts() {
 
   return {
     contacts,
+    setContacts,
     filteredContacts,
     orderBy,
     search,
