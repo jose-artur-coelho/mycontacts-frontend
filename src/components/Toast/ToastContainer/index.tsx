@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import ToastMessage from "../ToastMessage";
 import { Container } from "./styles";
 import { toastEventManager } from "../../../utils/toast";
+import reverseArray from "../../../utils/reverseArray";
 
 export interface Message {
   id: number;
@@ -12,6 +13,7 @@ export interface Message {
 
 export default function ToastContainer() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const reversedMessages = reverseArray<Message>(messages);
   useEffect(() => {
     function handleAddToast({ type = "default", text, duration }: Message) {
       setMessages((prevState) => [
@@ -35,7 +37,7 @@ export default function ToastContainer() {
 
   return (
     <Container>
-      {messages.map((message) => (
+      {reversedMessages.map((message) => (
         <ToastMessage
           key={message.id}
           onRemoveToast={handleRemoveToast}
