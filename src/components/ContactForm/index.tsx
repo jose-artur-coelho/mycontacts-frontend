@@ -9,7 +9,7 @@ import Select from "../Select";
 import Button from "../Button";
 
 import React, { Ref, forwardRef, useImperativeHandle, useState } from "react";
-import useFormErrors from "../../hooks/useFormError";
+import useFormErrors from "../../hooks/useFormErrors";
 import useCategories from "../../hooks/useCategories";
 
 import ContactWithoutId from "../../types/ContactWithoutId";
