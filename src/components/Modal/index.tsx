@@ -1,33 +1,57 @@
+import { ReactNode } from "react";
 import Button from "../Button";
 import ReactPortal from "../ReactPortal";
 import { Container, Footer, Overlay } from "./styles";
 
 interface ModalProps {
+  title: string;
+  children: ReactNode;
   danger?: boolean;
+  cancelLabel?: string;
+  confirmLabel?: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+  isVisible: boolean;
+  isLoading?: boolean;
 }
 
-const defaultProps: ModalProps = {
-  danger: false,
-};
+export default function Modal({
+  title,
+  children,
+  danger = false,
+  cancelLabel = "Cancelar",
+  confirmLabel = "Confirmar",
+  onCancel,
+  onConfirm,
+  isVisible,
+  isLoading = false,
+}: ModalProps) {
+  if (!isVisible) return null;
 
-export default function Modal({ danger = defaultProps.danger }: ModalProps) {
   return (
     <ReactPortal containerId="modal-root">
       <Overlay>
         <Container $danger={danger}>
-          <h1>title</h1>
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam
-            asperiores est neque, totam accusamus nisi assumenda sapiente hic
-            reprehenderit minus consequuntur expedita laudantium temporibus
-            architecto vitae molestias repellat consequatur a.
-          </p>
+          <h1>{title}</h1>
+
+          <div className="modal-body">{children}</div>
+
           <Footer>
-            <button type="button" className="cancel-button">
-              Cancelar
+            <button
+              type="button"
+              className="cancel-button"
+              onClick={onCancel}
+              disabled={isLoading}
+            >
+              {cancelLabel}
             </button>
-            <Button type="button" danger={danger}>
-              Deletar
+            <Button
+              type="button"
+              danger={danger}
+              onClick={onConfirm}
+              isLoading={isLoading}
+            >
+              {confirmLabel}
             </Button>
           </Footer>
         </Container>
