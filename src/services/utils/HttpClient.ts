@@ -1,8 +1,10 @@
 import APIError from "../../errors/APIError";
+import ContactWithoutId from "../../types/ContactWithoutId";
+import delay from "../../utils/delay";
 
 interface Options {
   method: string;
-  body?: object;
+  body?: ContactWithoutId;
   headers?: object;
 }
 
@@ -18,14 +20,32 @@ class HttpClient {
     });
   }
 
-  post(path: string, options: { body: object; headers?: object }) {
+  post(path: string, options: { body: ContactWithoutId; headers?: object }) {
     return this.MakeRequest(path, {
       method: "POST",
       body: options?.body,
       headers: options?.headers,
     });
   }
+
+  put(path: string, options: { body: ContactWithoutId; headers?: object }) {
+    return this.MakeRequest(path, {
+      method: "PUT",
+      body: options.body,
+      headers: options?.headers,
+    });
+  }
+
+  delete(path: string, options?: { headers: object }) {
+    return this.MakeRequest(path, {
+      method: "DELETE",
+      headers: options?.headers,
+    });
+  }
+
   async MakeRequest(path: string, options: Options) {
+    await delay(1000);
+
     const headers = new Headers();
 
     if (options.body) headers.append("Content-Type", "application/json");
@@ -44,11 +64,14 @@ class HttpClient {
 
     let body = null;
     const contentType = response.headers.get("Content-Type");
+
     if (contentType?.includes("application/json")) {
       body = await response.json();
       if (response.ok) return body;
       throw new APIError(body.error);
-    } else {
+    }
+    if (response.ok) return body;
+    else {
       throw new APIError(`${response.status} - ${response.statusText}`);
     }
   }
