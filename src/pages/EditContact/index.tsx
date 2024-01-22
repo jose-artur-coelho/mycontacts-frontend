@@ -9,6 +9,7 @@ import ContactsService from "../../services/ContactsService";
 import ContactWithoutId from "../../types/ContactWithoutId";
 import toast from "../../utils/toast";
 import APIError from "../../errors/APIError";
+import useSafeAsyncAction from "../../hooks/useSafeAsyncAction";
 
 export default function EditContact() {
   const [isLoading, setIsLoading] = useState(true);
@@ -16,24 +17,30 @@ export default function EditContact() {
   const contactFormRef = useRef<ContactFormRef>(null);
   const { id } = useParams();
   const navigate = useNavigate();
+  const safeAsyncAction = useSafeAsyncAction();
 
   useEffect(() => {
-    (async function () {
+    async function loadContact() {
       try {
         setIsLoading(true);
 
         if (id) {
           const contactData = await ContactsService.getContactbyId(id);
-          setContactName(contactData.name);
-          contactFormRef.current?.setFieldsValues(contactData);
-          setIsLoading(false);
+          safeAsyncAction(() => {
+            setContactName(contactData.name);
+            contactFormRef.current?.setFieldsValues(contactData);
+            setIsLoading(false);
+          });
         }
       } catch {
-        navigate("/");
-        toast({ type: "danger", text: "Contato não encontrado" });
+        safeAsyncAction(() => {
+          navigate("/");
+          toast({ type: "danger", text: "Contato não encontrado" });
+        });
       }
-    })();
-  }, [id, navigate]);
+    }
+    loadContact();
+  }, [id, navigate, safeAsyncAction]);
 
   async function handleSubmit(contactData: ContactWithoutId) {
     try {
