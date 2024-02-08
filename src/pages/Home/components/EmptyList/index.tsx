@@ -2,7 +2,14 @@ import { EmptyListContainer } from "./styles";
 
 import emptyBox from "../../../../assets/images/icons/box.svg";
 
-export default function EmptyList() {
+interface EmpetyListProps {
+  visible: boolean;
+}
+export default function EmptyList({ visible }: EmpetyListProps) {
+  if (!visible) {
+    return null;
+  }
+
   return (
     <EmptyListContainer>
       <img src={emptyBox} alt="Empty box" />

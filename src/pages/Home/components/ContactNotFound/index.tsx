@@ -3,8 +3,16 @@ import { ContactNotFoundContainer } from "./styles";
 
 interface ContactNotFoundProps {
   searchTerm: string;
+  visible: boolean;
 }
-export default function ContactNotFound({ searchTerm }: ContactNotFoundProps) {
+export default function ContactNotFound({
+  searchTerm,
+  visible,
+}: ContactNotFoundProps) {
+  if (!visible) {
+    return null;
+  }
+
   return (
     <ContactNotFoundContainer>
       <img src={magnifier} alt="Magnifier with question mark" />

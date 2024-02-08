@@ -4,12 +4,18 @@ import { HeaderContainer } from "./styles";
 interface HeaderProps {
   numOfContacts: number;
   showNumContacts: boolean;
+  visible: boolean;
 }
 
 export default function Header({
+  visible,
   numOfContacts,
   showNumContacts,
 }: HeaderProps) {
+  if (!visible) {
+    return null;
+  }
+
   return (
     <HeaderContainer $showNumOfContacts={showNumContacts}>
       {showNumContacts && (

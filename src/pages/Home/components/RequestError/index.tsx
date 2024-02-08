@@ -3,9 +3,17 @@ import { ErrorContainer } from "./styles";
 import sadFace from "../../../../assets/images/icons/sadFace.svg";
 interface RequestErrorProps {
   retryFunction: () => void;
+  visible: boolean;
 }
 
-export default function RequestError({ retryFunction }: RequestErrorProps) {
+export default function RequestError({
+  retryFunction,
+  visible,
+}: RequestErrorProps) {
+  if (!visible) {
+    return null;
+  }
+
   return (
     <ErrorContainer>
       <img src={sadFace} alt="sad" />

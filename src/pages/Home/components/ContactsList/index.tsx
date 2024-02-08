@@ -18,6 +18,10 @@ export default function ContactsList({
   handleToggleOrderBy,
   onDeleteContact,
 }: ContactsListProps) {
+  if (!contacts.length) {
+    return null;
+  }
+
   return (
     <>
       <ListHeader orderBy={orderBy} handleToggleOrderBy={handleToggleOrderBy} />
