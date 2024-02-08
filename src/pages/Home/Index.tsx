@@ -36,14 +36,14 @@ export default function Home() {
       <SearchInput
         searchValue={search}
         onChange={handleSearchContact}
-        visible={!hasError && !isLoading && Boolean(filteredContacts.length)}
+        visible={!hasError && filteredContacts.length > 0}
       />
 
       <Container>
         <Header
           visible={!hasError}
           numOfContacts={filteredContacts.length}
-          showNumContacts={Boolean(contacts.length)}
+          showNumContacts={contacts.length > 0}
         />
 
         <ContactsList
