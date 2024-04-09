@@ -36,7 +36,7 @@ export default function Home() {
       <SearchInput
         searchValue={search}
         onChange={handleSearchContact}
-        visible={!hasError && filteredContacts.length > 0}
+        visible={!hasError || filteredContacts.length > 0}
       />
 
       <Container>

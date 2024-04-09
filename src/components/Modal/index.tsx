@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Button from "../Button";
 import ReactPortal from "../ReactPortal";
 import { Container, Footer, Overlay } from "./styles";
+import useAnimatedUnmount from "../../hooks/useAnimatedUnmount";
 
 interface ModalProps {
   title: string;
@@ -26,12 +27,17 @@ export default function Modal({
   isVisible,
   isLoading = false,
 }: ModalProps) {
-  if (!isVisible) return null;
+  const { shouldRender, componentRef } =
+    useAnimatedUnmount<HTMLDivElement>(isVisible);
+
+  if (!shouldRender) {
+    return null;
+  }
 
   return (
     <ReactPortal containerId="modal-root">
-      <Overlay>
-        <Container $danger={danger}>
+      <Overlay $isLeaving={!isVisible} ref={componentRef}>
+        <Container $danger={danger} $isLeaving={!isVisible}>
           <h1>{title}</h1>
 
           <div className="modal-body">{children}</div>

@@ -52,8 +52,8 @@ export default function useHome() {
 
   function handleCloseModal() {
     setIsModalVisible(false);
-    setContactToDelete(null);
   }
+
   function handleOpenModal(contact: Contact) {
     setIsModalVisible(true);
     setContactToDelete(contact);

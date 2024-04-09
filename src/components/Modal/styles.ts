@@ -1,6 +1,30 @@
-import styled from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 
-export const Overlay = styled.div`
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`;
+
+const scaleIn = keyframes`
+  from { transform: scale(0) }
+  to { transform: scale(1) }
+`;
+
+const scaleOut = keyframes`
+  from { transform: scale(1) }
+  to { transform: scale(0) }
+`;
+
+interface OverlayProps {
+  $isLeaving?: boolean;
+}
+
+export const Overlay = styled.div<OverlayProps>`
   background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(5px);
   position: fixed;
@@ -11,10 +35,17 @@ export const Overlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: ${fadeIn} 0.5s;
+  ${({ $isLeaving }) =>
+    $isLeaving &&
+    css`
+      animation: ${fadeOut} 0.5s forwards;
+    `}
 `;
 
 interface ContainerProps {
   $danger?: boolean;
+  $isLeaving?: boolean;
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -24,6 +55,12 @@ export const Container = styled.div<ContainerProps>`
   border-radius: 4px;
   padding: 24px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0, 0.04);
+  animation: ${scaleIn} 0.5s;
+  ${({ $isLeaving }) =>
+    $isLeaving &&
+    css`
+      animation: ${scaleOut} 0.5s forwards;
+    `}
 
   > h1 {
     font-size: 22px;
